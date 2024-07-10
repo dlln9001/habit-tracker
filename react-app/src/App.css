@@ -1,0 +1,51 @@
+.auth-form{
+  background-color: white;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-input-box {
+  border: 1px solid #E6E6FA;
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-top: 50px;
+  padding-bottom: 150px;
+  text-align: center;
+}
+
+.user-signin-input{
+  display: inline-block;
+  padding: 10px;
+  margin: 5px;
+  width: 300px;
+  border: 1px solid #E6E6FA;
+  border-radius: 5px;
+  outline: 0px;
+}
+
+.user-signin-input:focus {
+  border: 1px solid black;
+}
+
+.signin-button {
+  margin: 5px;
+  margin-top: 15px;
+  padding: 8px;
+  width: 323px;
+  border: 1px solid #E6E6FA;
+  background-color: #87CEFA;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+}
+
+.signin-button:hover {
+  background-color: #4169E1;
+}
+
+.signup-text {
+  margin-bottom: 50px;
+
+}
