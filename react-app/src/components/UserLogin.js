@@ -47,7 +47,7 @@ function UserLogin() {
                             onChange={(e) => setPassword(e.target.value)}
                         />
                     </div>
-                    <button className="signin-button">sign in</button>
+                    <button className="signin-button">Log in</button>
                     <p>don't have an account yet? <strong style={{'cursor': 'pointer'}} onClick={signupPage}>Signup</strong></p>
                 </div>
             </form>
