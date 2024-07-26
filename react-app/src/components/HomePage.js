@@ -10,6 +10,9 @@ function HomePage() {
             <div>
                 <button onClick={() => setShowHabitForm(true)} className="add-habit">add habit</button>
             </div>
+            <div>
+
+            </div>
             
         </>
     )

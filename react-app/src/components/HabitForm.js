@@ -16,7 +16,7 @@ function HabitForm(props) {
     const [daysSelected, setDaysSelected] = useState([])
     const [showDailyVar, setShowDailyVar] = useState(false)
 
-    const [weekInterval, setWeekInterval] = useState(false)
+    const [weekInterval, setWeekInterval] = useState(0)
     const [weekIntervalHtml, setWeekIntervalHtml] = useState([])
     const [showWeekVar, setShowWeekVar] = useState(false)
 
@@ -91,7 +91,7 @@ function HabitForm(props) {
     // when a user clicks a certain interval (daily, weekly or monthly), it will show more information, 
     // so the user can choose how much of that interval (ex weekly: 2 times a week, daily: monday, wedesnday)
     function showDaily() {
-        setWeekInterval(false)
+        setWeekInterval(0)
         setWeekIntervalHtml([])
         setDaysofMonthSelected([])
         setDailyClicked(true)
@@ -130,10 +130,10 @@ function HabitForm(props) {
 
     function showMonthly() {
         setDaysSelected([])
-        setWeekInterval(false)
+        setWeekInterval(0)
         setWeekIntervalHtml([])
         setDailyClicked(false)
-        setWeeklyClicked(false)
+        setWeeklyClicked(false) 
         setMonthlyClicked(true)
         let daysOfMonth = []
         for (let i=1; i < 32; i++) {
@@ -233,7 +233,7 @@ function HabitForm(props) {
                                 {weekIntervalHtml}
                             </div>
                         }
-                        {weekInterval &&
+                        {weekInterval !=0 &&
                             <div className="times-per-week-txt">
                                  Numer of times per week: {weekInterval}
                             </div>
