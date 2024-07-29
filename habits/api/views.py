@@ -1,6 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from ..models import Habit
+from .serializers import HabitSerializer
 
 
 @api_view(['POST', 'GET'])
@@ -18,3 +19,10 @@ def create_habit(request):
                           quantity=request.data['goal_amount'],         notes=request.data['extra_notes'])
     new_habit.save()
     return Response({'getting response': 'true'})   
+
+
+@api_view(['POST', 'GET'])
+def get_habit(request):
+    habits = Habit.objects.filter(user=request.user)
+    serialized_habits = HabitSerializer(habits, many=True)
+    return Response({'habits_data': serialized_habits.data})

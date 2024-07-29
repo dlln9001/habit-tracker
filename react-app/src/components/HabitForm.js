@@ -6,6 +6,7 @@ import { IoMdClose } from "react-icons/io";
 function HabitForm(props) {
     const [userToken, setUserToken] = useState(JSON.parse(localStorage.getItem('userInfo')).token)
     const [habitName, setHabitName] = useState('')
+    const [noNameCheck, setNoNameCheck] = useState(false)
     const [extraNotes, setExtraNotes] = useState('')
     
     const [dailyClicked, setDailyClicked] = useState(false)
@@ -58,26 +59,31 @@ function HabitForm(props) {
     }, [showDailyVar])
 
     function createHabit() {
-        fetch("http://127.0.0.1:8000/habit/create/", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Token ${userToken}`
-            },
-            body: JSON.stringify({
-                chosen_icon: chosenIcon,
-                habit_name: habitName,
-                days_selected: daysSelected,
-                week_interval: weekInterval,
-                days_of_month_selected: daysOfMonthSelected,
-                goal_amount: goalAmount,
-                time_amount: timeAmount,
-                extra_notes: extraNotes
+        if (habitName != ''){
+            fetch("http://127.0.0.1:8000/habit/create/", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${userToken}`
+                },
+                body: JSON.stringify({
+                    chosen_icon: chosenIcon,
+                    habit_name: habitName,
+                    days_selected: daysSelected,
+                    week_interval: weekInterval,
+                    days_of_month_selected: daysOfMonthSelected,
+                    goal_amount: goalAmount,
+                    time_amount: timeAmount,
+                    extra_notes: extraNotes
+                })
             })
-        })
-        .then(res => res.json())
-        .then(data => console.log(data))
-        props.setShowHabitForm(false)
+            .then(res => res.json())
+            .then(data => window.location.reload())
+            props.setShowHabitForm(false)
+        }
+        else{
+            setNoNameCheck(true)
+        }
     }
 
     function closeForm() {
@@ -275,6 +281,9 @@ function HabitForm(props) {
                         onChange={(e) => setExtraNotes(e.target.value)}
                         ></textarea>
                     </div>
+                    {noNameCheck &&
+                        <p style={{marginLeft: '300px'}}>Please enter a habit name</p>
+                    }
                     <button className="create-habit-button" onClick={createHabit}>create habit</button>
             </div>
             {showAllIcons &&
