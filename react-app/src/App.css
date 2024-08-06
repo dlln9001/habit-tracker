@@ -352,6 +352,7 @@ body {
   width: 600px;
   border-radius: 10px;
   margin: 10px;
+  cursor: pointer;
 }
 
 .habit-preview-icon {

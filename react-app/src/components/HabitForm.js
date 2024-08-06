@@ -45,7 +45,64 @@ function HabitForm(props) {
         'garden-flower-gardening-svgrepo-com.svg',
     ])
     const [chosenIcon, setChosenIcon] = useState(process.env.PUBLIC_URL + '/svgs/square-check-svgrepo-com.svg')
- 
+    const [userEditing, setUserEditing] = useState(false)
+    const [dontUpdateHabit, setDontUpdateHabit] = useState(false)
+
+    
+    if (props.isEditHabit && !userEditing && (daysSelected.length === 0 && daysOfMonthSelected.length === 0 && weekInterval ===0 ) && dontUpdateHabit === false) {
+        setHabitName(props.habitName)
+        setChosenIcon(props.habitIcon)
+        setExtraNotes(props.habitNotes)
+        if (props.habitDays.length){
+            setDailyClicked(true)
+            setDaysSelected(props.habitDays)
+        }
+        else if (props.habitDaysOfMonth.length) {
+            setMonthlyClicked(true)
+            setDaysofMonthSelected(props.habitDaysOfMonth)
+            showMonthly()
+        }
+        else if (props.habitTimesPerWeek != 0) {
+            setWeeklyClicked(true)
+            setWeekInterval(props.habitTimesPerWeek)
+            showWeekly()
+        }
+
+        if (props.habitDuration) {
+            setTimeAsGoal(true)
+            setTimeAmount(props.habitDuration)
+        }
+        else {
+            setAmountAsGoal(true)
+            setGoalAmount(props.habitQuantity)
+        }
+
+
+    }
+    
+    function editHabit() {
+        fetch('http://127.0.0.1:8000/habit/edit/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${userToken}`,
+            },
+            body: JSON.stringify({
+                habit_id: props.habitId,
+                habit_name: habitName,
+                habit_icon: chosenIcon,
+                habit_notes: extraNotes,
+                habit_days: daysSelected,
+                habit_days_of_month: daysOfMonthSelected,
+                habit_times_per_week: weekInterval,
+                habit_duration: timeAmount,
+                habit_quantity: goalAmount
+            })
+        })
+        .then(res => res.json())
+        .then(data => window.location.reload())
+    }
+
     useEffect(() => {
         showWeekly()
     }, [showWeekVar])
@@ -54,7 +111,7 @@ function HabitForm(props) {
         showMonthly()
     }, [showMonthVar])
 
-    useEffect(() => {
+    useEffect(() => {   
         showDaily()
     }, [showDailyVar])
 
@@ -117,38 +174,64 @@ function HabitForm(props) {
     
 
     function showWeekly() {
+        let amounts = ['1', '2', '3', '4', '5', '6']
+        let tempWeekInterval = []
+        if (props.isEditHabit && !userEditing) {
+            let weekInterval = props.habitTimesPerWeek
+            for(let i=1; i < 7; i++) {
+                tempWeekInterval.push(
+                    <div className="day-selection" key={i} onClick={() => weeksAdded(i)} style={{backgroundColor: weekInterval === i && '#DEB887'}}>
+                        {amounts[i-1]}
+                    </div>
+                )
+            }
+        }
+        else {
+            for(let i=1; i < 7; i++) {
+                tempWeekInterval.push(
+                    <div className="day-selection" key={i} onClick={() => weeksAdded(i)} style={{backgroundColor: weekInterval === i && '#DEB887'}}>
+                        {amounts[i-1]}
+                    </div>
+                )
+            }
+        }
         setDaysSelected([])
         setDaysofMonthSelected([])
         setDailyClicked(false)
         setWeeklyClicked(true)
         setMonthlyClicked(false)
-        let amounts = ['1', '2', '3', '4', '5', '6']
-        let tempWeekInterval = []
-        for(let i=1; i < 7; i++) {
-            tempWeekInterval.push(
-                <div className="day-selection" key={i} onClick={() => weeksAdded(i)} style={{backgroundColor: weekInterval === i && '#DEB887'}}>
-                    {amounts[i-1]}
-                </div>
-            )
-        }
+
+
         setWeekIntervalHtml(tempWeekInterval)
     }
 
     function showMonthly() {
+        let daysOfMonth = []
+        if (props.isEditHabit && !userEditing) {
+            let daysOfMonthSelected = props.habitDaysOfMonth
+            for (let i=1; i < 32; i++) {
+                daysOfMonth.push(
+                    <div className="day-of-month" key={i} onClick={() => monthsAdded(i)} style={{backgroundColor: daysOfMonthSelected.includes(i) && '#DEB887'}}>
+                        {i}
+                    </div>
+                )
+            }
+        }
+        else {
+            for (let i=1; i < 32; i++) {
+                daysOfMonth.push(
+                    <div className="day-of-month" key={i} onClick={() => monthsAdded(i)} style={{backgroundColor: daysOfMonthSelected.includes(i) && '#DEB887'}}>
+                        {i}
+                    </div>
+                )
+            }
+        }
         setDaysSelected([])
         setWeekInterval(0)
         setWeekIntervalHtml([])
         setDailyClicked(false)
         setWeeklyClicked(false) 
         setMonthlyClicked(true)
-        let daysOfMonth = []
-        for (let i=1; i < 32; i++) {
-            daysOfMonth.push(
-                <div className="day-of-month" key={i} onClick={() => monthsAdded(i)} style={{backgroundColor: daysOfMonthSelected.includes(i) && '#DEB887'}}>
-                    {i}
-                </div>
-            )
-        }
         setDaysOfMonthHtml(daysOfMonth)
     }
 
@@ -159,12 +242,14 @@ function HabitForm(props) {
             return updatedDaysSelected
         })
         setShowDailyVar(dayIndex)
+        setUserEditing(true)
     }   
 
     function weeksAdded(weekIndex) {
 
         setWeekInterval(weekIndex)
         setShowWeekVar(weekIndex)
+        setUserEditing(true)
     }
 
     function monthsAdded(monthIndex) {
@@ -173,6 +258,7 @@ function HabitForm(props) {
             return updatedDaysSelected
         })
         setShowMonthvar(monthIndex)
+        setUserEditing(true)
     }
 
     function amountGoal() {
@@ -225,9 +311,9 @@ function HabitForm(props) {
                     </div>
                     <div className="habit-form-container">
                         <div className="interval-choices">
-                            <button className="interval-button" onClick={showDaily} style={{backgroundColor: dailyClicked && '#DEB887'}}>daily</button>
-                            <button className="interval-button" onClick={showWeekly} style={{backgroundColor: weeklyClicked && '#DEB887'}}>weekly</button>
-                            <button className="interval-button" onClick={showMonthly} style={{backgroundColor: monthlyClicked && '#DEB887'}}>monthly</button>
+                            <button className="interval-button" onClick={() => {showDaily(); setDontUpdateHabit(true)}} style={{backgroundColor: dailyClicked && '#DEB887'}}>daily</button>
+                            <button className="interval-button" onClick={() => {showWeekly(); setDontUpdateHabit(true)}} style={{backgroundColor: weeklyClicked && '#DEB887'}}>weekly</button>
+                            <button className="interval-button" onClick={() => {showMonthly(); setDontUpdateHabit(true)}} style={{backgroundColor: monthlyClicked && '#DEB887'}}>monthly</button>
                         </div>
                         {dailyClicked &&
                             <div className="days-of-week-container">
@@ -284,7 +370,11 @@ function HabitForm(props) {
                     {noNameCheck &&
                         <p style={{marginLeft: '300px'}}>Please enter a habit name</p>
                     }
-                    <button className="create-habit-button" onClick={createHabit}>create habit</button>
+                    {props.isEditHabit 
+                    ?   <button className="create-habit-button" onClick={editHabit}>save habit</button>
+                    :   <button className="create-habit-button" onClick={createHabit}>create habit</button>
+                    }
+                    
             </div>
             {showAllIcons &&
                 <div>
