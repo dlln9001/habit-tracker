@@ -6,7 +6,6 @@ from .serializers import HabitSerializer
 
 @api_view(['POST', 'GET'])
 def create_habit(request):
-    print(request.data)
     if request.data['time_amount']:
         new_habit = Habit(user=request.user,                            icon_url=request.data['chosen_icon'], 
                           name=request.data['habit_name'],              days=request.data['days_selected'], 
@@ -45,3 +44,11 @@ def edit_habit(request):
             habit.quantity = request.data['habit_quantity']
         habit.save()
         return Response({'getting response': 'true'})
+
+
+@api_view(['POST', 'GET'])
+def delete_habit(request):
+    habit_id = request.data['habit_id']
+    habit = Habit.objects.get(id=habit_id)
+    habit.delete()
+    return Response({'getting response', 'true'})

@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { useEffect } from "react";
 import { IoMdClose } from "react-icons/io";
+import { SlOptions } from "react-icons/sl";
 
 
 function HabitForm(props) {
@@ -47,6 +48,7 @@ function HabitForm(props) {
     const [chosenIcon, setChosenIcon] = useState(process.env.PUBLIC_URL + '/svgs/square-check-svgrepo-com.svg')
     const [userEditing, setUserEditing] = useState(false)
     const [dontUpdateHabit, setDontUpdateHabit] = useState(false)
+    const [showHabitOptions, setShowHabitOptions] = useState(false)
 
     
     if (props.isEditHabit && !userEditing && (daysSelected.length === 0 && daysOfMonthSelected.length === 0 && weekInterval ===0 ) && dontUpdateHabit === false) {
@@ -294,11 +296,40 @@ function HabitForm(props) {
         setShowAllIcons(false)
     }
 
+    function deleteHabit() {
+        fetch('http://127.0.0.1:8000/habit/delete/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${userToken}`,
+            },
+            body: JSON.stringify({
+                habit_id: props.habitId
+            })
+        })
+        .then(res => res.json())
+        .then(data => window.location.reload())
+    }
+
     return (
         <>
-            <div className="black-background" onClick={closeForm}></div>
+            {showHabitOptions
+            ? 
+            <>
+                <div className="black-background-3" onClick={() => setShowHabitOptions(false)}></div>
+                <div className="habit-options">
+                    <p className="habit-options-txt">options</p>
+                    <p className="habit-option" style={{color: 'red'}} onClick={deleteHabit}>delete</p>
+                    <p className="habit-option" onClick={() => setShowHabitOptions(false)}>cancel</p>
+                </div>
+            </>
+            : <div className="black-background" onClick={closeForm}></div>
+            }
             <div className="habit-form">
                 <IoMdClose className="close-habit-form" onClick={closeForm}/>
+                {props.isEditHabit &&
+                    <SlOptions className="show-habit-options" onClick={() => setShowHabitOptions(true)}/>
+                }
                     <p className="choose-icon-txt" onClick={loadIconPage}>choose icon</p>
                     <img src={chosenIcon} alt="" className="create-habit-icon" onClick={loadIconPage}/>
                     <div>

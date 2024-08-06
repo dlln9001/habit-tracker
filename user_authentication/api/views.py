@@ -15,7 +15,6 @@ def test(request):
 @api_view(['GET', 'POST'])
 def user_signup(request):
     serializer = UserSerializer(data=request.data)
-    print('sdingininlk;ajsdl;fkjalksjdfkljasd', serializer, serializer.is_valid(), request.data)
     if serializer.is_valid():
         serializer.save()
         user = User.objects.get(username=request.data['username'])
