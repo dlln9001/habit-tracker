@@ -17,7 +17,7 @@ def create_habit(request):
                           times_per_week=request.data['week_interval'], days_of_month=request.data['days_of_month_selected'],
                           quantity=request.data['goal_amount'],         notes=request.data['extra_notes'])
     new_habit.save()
-    return Response({'getting response': 'true'})   
+    return Response({'status': 'success'})   
 
 
 @api_view(['POST', 'GET'])
@@ -43,7 +43,7 @@ def edit_habit(request):
         else:
             habit.quantity = request.data['habit_quantity']
         habit.save()
-        return Response({'getting response': 'true'})
+        return Response({'status': 'success'})
 
 
 @api_view(['POST', 'GET'])
@@ -51,4 +51,14 @@ def delete_habit(request):
     habit_id = request.data['habit_id']
     habit = Habit.objects.get(id=habit_id)
     habit.delete()
-    return Response({'getting response', 'true'})
+    return Response({'status': 'success'})
+
+
+@api_view(['POST', 'GET'])
+def mark_habit_complete(request):
+    todays_date = request.data['todays_date']
+    habit = Habit.objects.get(id=request.data['habit_id'])
+    if todays_date not in habit.dates_completed:
+        habit.dates_completed.append(todays_date)
+        habit.save()
+    return Response({'status': 'success'})

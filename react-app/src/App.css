@@ -279,8 +279,9 @@ body {
 
 .amount-input {
   border: 0px solid black;
-  background-color: whitesmoke;
-  border-radius: 3px;
+  border-bottom: 1px solid #888;
+  background-color: inherit;
+  text-align: center;
   outline: none;
   width: 80px;
   height: 30px;
@@ -415,4 +416,27 @@ body {
 
 .habit-option:hover {
   background-color: #F8F8FF;
+}
+
+.habit-set {
+  position: absolute;
+  background-color: white;
+  text-align: center;
+  border-radius: 10px;
+}
+
+.habit-set-option {
+  width: 200px;
+  padding: 10px;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.habit-set-option:hover {
+  background-color: #FAEBD7;
+}
+
+.times-left {
+  margin-left: 30px;
 }

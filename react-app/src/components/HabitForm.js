@@ -118,7 +118,7 @@ function HabitForm(props) {
     }, [showDailyVar])
 
     function createHabit() {
-        if (habitName != ''){
+        if (habitName != '' && (goalAmount != '' || timeAmount != '')){
             fetch("http://127.0.0.1:8000/habit/create/", {
                 method: 'POST',
                 headers: {
@@ -399,7 +399,7 @@ function HabitForm(props) {
                         ></textarea>
                     </div>
                     {noNameCheck &&
-                        <p style={{marginLeft: '300px'}}>Please enter a habit name</p>
+                        <p style={{marginLeft: '250px'}}>Please enter a habit name and quantity</p>
                     }
                     {props.isEditHabit 
                     ?   <button className="create-habit-button" onClick={editHabit}>save habit</button>

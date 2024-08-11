@@ -26,6 +26,9 @@ class Habit(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     icon_url = models.CharField(max_length=200)
 
+    dates_completed = models.JSONField(default=list)
+    streak = models.PositiveIntegerField(default=0)
+
     def habit_type(self):
         if self.duration is not '':
             return 'time-based'
