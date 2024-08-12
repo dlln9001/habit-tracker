@@ -327,7 +327,7 @@ body {
   display: block;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 200px;
+  margin-top: 20px;
 
 }
 
@@ -456,11 +456,30 @@ body {
   border-radius: 10px;
   z-index: 2;
   margin-left: 31%;
-  margin-top: 5%;
 }
 
 .close-all-habit-form {
   font-size: 28px;
   margin-left: 5px;
   cursor: pointer;
+}
+
+.calender-container {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  max-height: 100px;
+  margin-top: 20px;
+  width: fit-content;
+  margin-inline: auto;
+}
+
+.calender-day-box {
+  background-color: #E6E6FA;
+  flex: 0 0 14%;
+  margin: 1px;
+  height: 10px;
+  width: 10px;  
+  aspect-ratio: 1/1;
+  border-radius: 3px;
 }

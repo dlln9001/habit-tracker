@@ -2,6 +2,7 @@ import HabitForm from "./HabitForm"
 import { CiClock1 } from "react-icons/ci";
 import { useState, useEffect, useRef } from "react"
 import { IoMdClose } from "react-icons/io";
+import Calender from "./Calender";
 
 function HomePage() {
     const [userToken, setUserToken] = useState(JSON.parse(localStorage.getItem('userInfo')).token)
@@ -16,6 +17,7 @@ function HomePage() {
     const [boxPosition, setBoxPosition] = useState({ top: 0, left: 0 })
     const [showSetHabit, setShowSetHabit] = useState(false)
     const [showSetHabitIndex, setShowSetHabitIndex] = useState(-1)
+    const [allDaysCompleted, setAllDaysCompleted] = useState([])
     const containerRef = useRef(null)
 
     // fields to send to habit form, so the user can preview or edit the habit
@@ -57,10 +59,11 @@ function HomePage() {
     }, [showSetHabit, updateHabits])  
 
     function showHabits(data) {
+        setAllDaysCompleted([])
         let tempListHtml = []
         let today = new Date()
         let year = today.getFullYear()
-        let month = today.getMonth()
+        let month = today.getMonth() + 1
         let day = today.getDate()
         let weekday = today.getDay()
         month = month.toString().padStart(2, '0')
@@ -80,6 +83,7 @@ function HomePage() {
             let daysDone = 0
             let weekDone = 0
             let monthDone = 0
+            setAllDaysCompleted((oldArray) => [...oldArray, ...current_habit.dates_completed])
             
             // here, we're calculating how many days have been done in this week. In order to say how many more times we have to do a habit this week
             if (current_habit.days.length) {
@@ -97,7 +101,7 @@ function HomePage() {
                 for (let i=localDay; i>0; i--) {
                     let date_completed = current_habit.dates_completed[datesCompletedLastIndex]
                     let dateCompleted = new Date(date_completed)
-                    if (today.getMonth() === dateCompleted.getMonth() + 1 && year === dateCompleted.getFullYear()) {
+                    if (today.getMonth() === dateCompleted.getMonth() && year === dateCompleted.getFullYear()) {
                         monthDone += 1
                     }
                     datesCompletedLastIndex -= 1
@@ -164,12 +168,13 @@ function HomePage() {
         }
         setHabitListHtml(tempListHtml)
     }
+    
 
     function markHabitComplete(index, data) {
         let habit = data.habits_data[index]
         let today = new Date()
         let year = today.getFullYear()
-        let month = today.getMonth()
+        let month = today.getMonth() + 1
         let day = today.getDate()
         month = month.toString().padStart(2, '0')
         day = day.toString().padStart(2, '0')
@@ -246,6 +251,7 @@ function HomePage() {
                 <button onClick={createHabit} className="home-page-option">add habit</button>
                 <button className="home-page-option" onClick={viewAllHabits}>view all habits</button>
             </div>
+            <Calender allDaysCompleted={allDaysCompleted}/>
             {isViewAllHabits &&
                 <> 
                     <div className="view-all-habits">
