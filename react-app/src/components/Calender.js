@@ -4,11 +4,12 @@ import { useState, useEffect } from "react"
 function Calender(props) {
     const [calenderHtml, setCalenderHtml] = useState('')
     const [allDays, setAllDays] = useState([])
+    const [update, setUpdate] = useState(false)
     
     useEffect(() => {
         let tempHtml = []
         setAllDays([])
-
+        console.log(allDays)
         for (let i=0; i<props.allDaysCompleted.length; i++) {
             let dayOfYear = getDayOfYear(props.allDaysCompleted[i])
             setAllDays((prevArray) => [...prevArray, dayOfYear])
@@ -22,8 +23,13 @@ function Calender(props) {
             
         }   
         setCalenderHtml(tempHtml)
-        console.log(props.allDaysCompleted, 'spaaaace', allDays)
-    }, [props.allDaysCompleted, allDays])
+    }, [props.allDaysCompleted, update])
+
+    useEffect(() => {
+       if (!allDays.length) {
+        setUpdate(!update)
+       } 
+    })
 
     function getDayOfYear (date) {
         var now = new Date(date)

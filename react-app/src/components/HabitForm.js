@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { IoMdClose } from "react-icons/io";
 import { SlOptions } from "react-icons/sl";
 
@@ -9,6 +9,7 @@ function HabitForm(props) {
     const [habitName, setHabitName] = useState('')
     const [noNameCheck, setNoNameCheck] = useState(false)
     const [extraNotes, setExtraNotes] = useState('')
+    const amountInput = useRef()
     
     const [dailyClicked, setDailyClicked] = useState(false)
     const [weeklyClicked, setWeeklyClicked] = useState(false)
@@ -326,10 +327,18 @@ function HabitForm(props) {
             : <div className="black-background" onClick={closeForm}></div>
             }
             <div className="habit-form">
-                <IoMdClose className="close-habit-form" onClick={closeForm}/>
-                {props.isEditHabit &&
-                    <SlOptions className="show-habit-options" onClick={() => setShowHabitOptions(true)}/>
-                }
+                <div style={{display: 'flex'}}>
+                    <IoMdClose className="close-habit-form" onClick={closeForm}/>
+                    {props.isEditHabit 
+                    ?
+                        <>
+                            <SlOptions className="show-habit-options" onClick={() => setShowHabitOptions(true)}/>
+                            <p className="save-habit-button" onClick={editHabit}>save</p>
+                        </>
+                    :
+                    <p className="create-habit-button" onClick={createHabit}>Create</p>
+                    }
+                </div>
                     <p className="choose-icon-txt" onClick={loadIconPage}>choose icon</p>
                     <img src={chosenIcon} alt="" className="create-habit-icon" onClick={loadIconPage}/>
                     <div>
@@ -374,19 +383,21 @@ function HabitForm(props) {
                             <button className="goal-button" style={{backgroundColor: timeAsGoal && '#DEB887'}} onClick={timeGoal}>Time</button>
                         </div>
                         {amountAsGoal &&
-                            <div className="amount-input-container">
+                            <div className="amount-input-container" onClick={() => amountInput.current.focus()}>
                                 <input type="number" max={9999} className="amount-input"
                                 value={goalAmount}
                                 onChange={(e) => setGoalAmount(e.target.value)}
+                                ref={amountInput}
                                 />
                                 <p>times</p>
                             </div>
                         }
                         {timeAsGoal &&
-                            <div className="amount-input-container">
+                            <div className="amount-input-container" onClick={() => amountInput.current.focus()}>
                                 <input type="number" max={9999} className="amount-input"
                                 value={timeAmount}
                                 onChange={(e) => setTimeAmount(e.target.value)}
+                                ref={amountInput}
                                 />
                                 <p>minutes</p>
                             </div>
@@ -401,11 +412,6 @@ function HabitForm(props) {
                     {noNameCheck &&
                         <p style={{marginLeft: '250px'}}>Please enter a habit name and quantity</p>
                     }
-                    {props.isEditHabit 
-                    ?   <button className="create-habit-button" onClick={editHabit}>save habit</button>
-                    :   <button className="create-habit-button" onClick={createHabit}>create habit</button>
-                    }
-                    
             </div>
             {showAllIcons &&
                 <div>

@@ -3,6 +3,8 @@ import { CiClock1 } from "react-icons/ci";
 import { useState, useEffect, useRef } from "react"
 import { IoMdClose } from "react-icons/io";
 import Calender from "./Calender";
+import { IoIosAddCircleOutline } from "react-icons/io";
+import { CgMoreO } from "react-icons/cg";
 
 function HomePage() {
     const [userToken, setUserToken] = useState(JSON.parse(localStorage.getItem('userInfo')).token)
@@ -248,8 +250,8 @@ function HomePage() {
                 />
             }
             <div className="home-page-options-container">
-                <button onClick={createHabit} className="home-page-option">add habit</button>
-                <button className="home-page-option" onClick={viewAllHabits}>view all habits</button>
+                <IoIosAddCircleOutline onClick={createHabit} className="home-page-option"/>
+                <CgMoreO  className="home-page-option" onClick={viewAllHabits} style={{fontSize: '26px', marginTop: '17px'}}/>
             </div>
             <Calender allDaysCompleted={allDaysCompleted}/>
             {isViewAllHabits &&
